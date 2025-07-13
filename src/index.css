@@ -73,7 +73,7 @@ body {
 }
 
 .ct-topmenu-expanded {
-  @apply absolute top-10 z-50 w-full text-center bg-white;
+  @apply absolute top-10 z-50 w-full text-center bg-white h-auto;
   animation: slideDown 0.4s ease-in-out;
 }
 
