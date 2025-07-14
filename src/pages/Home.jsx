@@ -21,6 +21,8 @@ function Home() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [courses, setCourses] = useState([]);
   const [userCourses, setUserCourses] = useState([]);
@@ -40,15 +42,30 @@ function Home() {
   // Lấy dữ liệu theo tab đang chọn
   const currentCourses = tab === "suggested" ? courses : userCourses;
 
-  // Cập nhật filtered courses khi courses thay đổi
+  // Lọc dữ liệu khi searchTerm thay đổi
   useEffect(() => {
-    setFilteredCourses(currentCourses);
-  }, [currentCourses]);
+    if (!searchTerm.trim()) {
+      setFilteredCourses(currentCourses);
+      return;
+    }
+    const lower = searchTerm.toLowerCase();
+    const filtered = currentCourses.filter(
+      (course) =>
+        course.name?.toLowerCase().includes(lower) ||
+        course.description?.toLowerCase().includes(lower)
+    );
+    setFilteredCourses(filtered);
+  }, [searchTerm, currentCourses]);
 
-  // Xử lý tìm kiếm - chuyển đến trang Search
-  const handleSearch = (searchTerm) => {
-    if (searchTerm.trim()) {
-      window.navigateTo("/search");
+  // Khi đổi tab thì reset showAllCourses
+  useEffect(() => {
+    setShowAllCourses(false);
+  }, [tab]);
+
+  // Xử lý tìm kiếm - submit
+  const handleSearch = (term) => {
+    if (term.trim()) {
+      window.location.href = `/search?query=${encodeURIComponent(term)}`;
     }
   };
 
@@ -82,6 +99,7 @@ function Home() {
 
   // Xóa bộ lọc
   const handleClearFilters = () => {
+    setSearchTerm("");
     setFilteredCourses(currentCourses);
   };
 
@@ -119,7 +137,7 @@ function Home() {
   const recentHistory = getRecentHistory(4);
 
   return (
-    <div className="content-wrapper max-w-screen-2xl text-base mx-auto px-8">
+    <div className="content-wrapper max-w-screen-2xl text-base mx-auto px-8 mt-8">
       <img
         src="/image/bg1.png"
         alt="bg"
@@ -128,6 +146,8 @@ function Home() {
 
       {/* Search and Filter */}
       <SearchAndFilter
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
         onSearch={handleSearch}
         onFilter={handleFilter}
         onClear={handleClearFilters}
@@ -210,20 +230,47 @@ function Home() {
       </div>
 
       {/* Danh sách card khóa học */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8 w-full px-4">
-        {filteredCourses.slice(0, 4).map((course) => (
-          <CourseCard
-            key={course.id}
-            course={course}
-            isSelected={selectedCourse?.id === course.id}
-            isFavorite={isInFavorites(course.id)}
-            onSelect={handleSelectCourse}
-            onAddToCart={() => handleAddToCart(course)}
-            onFavorite={() => handleFavorite(course)}
-            onShare={handleViewDetail}
-          />
-        ))}
+      <div
+        className={`grid ${
+          filteredCourses.length > 0 &&
+          filteredCourses.length !== currentCourses.length
+            ? "grid-cols-1"
+            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
+        } gap-6 mb-8 w-full px-4`}
+      >
+        {(showAllCourses ? filteredCourses : filteredCourses.slice(0, 4)).map(
+          (course) => (
+            <CourseCard
+              key={course.id}
+              course={course}
+              isSelected={selectedCourse?.id === course.id}
+              isFavorite={isInFavorites(course.id)}
+              onSelect={handleSelectCourse}
+              onAddToCart={() => handleAddToCart(course)}
+              onFavorite={() => handleFavorite(course)}
+              onShare={handleViewDetail}
+              {...(tab === "learning"
+                ? {
+                    hideAddToCart: true,
+                    hideFavorite: true,
+                    customViewLabel: "Vào khóa học",
+                  }
+                : {})}
+            />
+          )
+        )}
       </div>
+      {/* Nút Xem thêm */}
+      {!showAllCourses && filteredCourses.length > 4 && (
+        <div className="flex justify-center mb-8">
+          <button
+            className="px-6 py-2 bg-orange-500 text-white rounded-lg font-semibold hover:bg-orange-600 transition-all"
+            onClick={() => setShowAllCourses(true)}
+          >
+            Xem thêm
+          </button>
+        </div>
+      )}
 
       <div
         className={
@@ -283,7 +330,7 @@ function Home() {
           className="transition-all border border-none hover:-translate-y-1.5 overflow-hidden hover:shadow-lg flex flex-col bg-white hover:opacity-100 rounded-md"
         >
           <img
-            src="https://s3-sgn09.fptcloud.com/codelearnstorage/files/thumbnails/Banner_olympic_8203a134a9f54835a7c7467dceae5cf6.png"
+            src="https://s3-sgn09.fptcloud.com/codelearnstorage/files/thumbnails/THCS__6__6eae258a972d4992b7853301eccb73d0.png"
             alt=""
             className="object-cover aspect-[1440/280] w-full"
           />
@@ -336,7 +383,7 @@ function Home() {
           className="transition-all border border-none hover:-translate-y-1.5 overflow-hidden hover:shadow-lg flex flex-col bg-white hover:opacity-100 rounded-md"
         >
           <img
-            src="https://s3-sgn09.fptcloud.com/codelearnstorage/files/thumbnails/Practice_algorithm_8203a134a9f54835a7c7467dceae5cf6.png"
+            src="https://vallicon.com/static/assets/img/DataStructureAndAlgorithm.png"
             alt=""
             className="object-cover aspect-[1440/280] w-full"
           />
@@ -378,7 +425,7 @@ function Home() {
           className="transition-all border border-none hover:-translate-y-1.5 overflow-hidden hover:shadow-lg flex flex-col bg-white hover:opacity-100 rounded-md"
         >
           <img
-            src="https://s3-sgn09.fptcloud.com/codelearnstorage/files/thumbnails/Practice_web_8203a134a9f54835a7c7467dceae5cf6.png"
+            src="https://media.licdn.com/dms/image/v2/D5612AQHyLFkv9YBcGA/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1715058774193?e=2147483647&v=beta&t=7yqv62DbvJWPvycGiDX4FGb79GOPsVB_dreB-SHh36E"
             alt=""
             className="object-cover aspect-[1440/280] w-full"
           />
@@ -440,7 +487,7 @@ function Home() {
               </div>
               <div className="w-full">
                 <img
-                  src="https://s3-sgn09.fptcloud.com/codelearnstorage/Upload/Blog/huong-dan-code-game-ran-san-moi-63720748434.143.jpg"
+                  src="https://s3-sgn09.fptcloud.com/codelearnstorage/Upload/Blog/huong-dan-lam-game-ran-san-moi-trong-cpp-63721179615.8205.jpg"
                   alt=""
                   className="w-full aspect-[160/108] object-cover rounded-md"
                 />

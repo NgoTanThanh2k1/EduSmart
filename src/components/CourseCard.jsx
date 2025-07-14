@@ -27,6 +27,9 @@ const CourseCard = ({
   onAddToCart,
   onFavorite,
   onShare,
+  hideAddToCart = false,
+  hideFavorite = false,
+  customViewLabel = null,
 }) => {
   const { addToHistory } = useViewHistory();
 
@@ -55,16 +58,34 @@ const CourseCard = ({
           boxShadow: 3,
         },
         border: isSelected ? "2px solid #1976d2" : "1px solid #e0e0e0",
+        overflow: "hidden", // ngăn ảnh lớn kéo giãn card
       }}
       onClick={() => onSelect(course)}
     >
-      <CardMedia
-        component="img"
-        height="140"
-        image={course.image || "https://via.placeholder.com/300x200"}
-        alt={course.name}
-        sx={{ objectFit: "cover" }}
-      />
+      <Box
+        sx={{
+          width: "100%",
+          height: 180,
+          overflow: "hidden",
+          borderRadius: "8px 8px 0 0",
+          background: "#f3f4f6",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          src={course.image || "https://via.placeholder.com/300x200"}
+          alt={course.name}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+            display: "block",
+          }}
+        />
+      </Box>
 
       <CardContent
         sx={{
@@ -98,10 +119,12 @@ const CourseCard = ({
             mb: 2,
             flexGrow: 1,
             display: "-webkit-box",
-            WebkitLineClamp: 3,
+            WebkitLineClamp: 2, // chỉ 2 dòng
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
+            textOverflow: "ellipsis",
             lineHeight: 1.4,
+            minHeight: "2.8em", // đảm bảo luôn đủ chỗ cho 2 dòng
           }}
         >
           {course.description}
@@ -172,60 +195,87 @@ const CourseCard = ({
 
         {/* Action Buttons */}
         <Box sx={{ display: "flex", gap: 1, mt: "auto" }}>
-          <Button
-            variant="contained"
-            startIcon={<ShoppingCart />}
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart(course);
-            }}
-            sx={{
-              flex: 1,
-              fontSize: "0.8rem",
-              py: 0.8,
-            }}
-          >
-            Thêm vào giỏ
-          </Button>
+          {!hideAddToCart && (
+            <Button
+              variant="contained"
+              startIcon={<ShoppingCart />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(course);
+              }}
+              sx={{
+                flex: 1,
+                fontSize: "0.8rem",
+                py: 0.8,
+              }}
+            >
+              Thêm vào giỏ
+            </Button>
+          )}
 
-          <Tooltip title="Xem chi tiết">
-            <IconButton
+          {customViewLabel ? (
+            <Button
+              variant="contained"
               onClick={(e) => {
                 e.stopPropagation();
                 handleViewDetail();
               }}
-              size="small"
               sx={{
-                backgroundColor: "primary.light",
+                flex: 1,
+                fontSize: "0.8rem",
+                py: 0.8,
+                backgroundColor: "#fb923c", // orange-500
                 color: "white",
+                borderRadius: "8px",
                 "&:hover": {
-                  backgroundColor: "primary.main",
+                  backgroundColor: "#f97316", // orange-600
                 },
               }}
             >
-              <Visibility />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title={isFavorite ? "Bỏ yêu thích" : "Thêm yêu thích"}>
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                onFavorite(course);
-              }}
-              color={isFavorite ? "error" : "default"}
-              size="small"
-              sx={{
-                backgroundColor: isFavorite ? "error.light" : "grey.100",
-                "&:hover": {
-                  backgroundColor: isFavorite ? "error.main" : "grey.200",
+              {customViewLabel}
+            </Button>
+          ) : (
+            <Tooltip title="Xem chi tiết">
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewDetail();
+                }}
+                size="small"
+                sx={{
+                  backgroundColor: "primary.light",
                   color: "white",
-                },
-              }}
-            >
-              {isFavorite ? <Favorite /> : <FavoriteBorder />}
-            </IconButton>
-          </Tooltip>
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                  },
+                }}
+              >
+                <Visibility />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          {!hideFavorite && (
+            <Tooltip title={isFavorite ? "Bỏ yêu thích" : "Thêm yêu thích"}>
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFavorite(course);
+                }}
+                color={isFavorite ? "error" : "default"}
+                size="small"
+                sx={{
+                  backgroundColor: isFavorite ? "error.light" : "grey.100",
+                  "&:hover": {
+                    backgroundColor: isFavorite ? "error.main" : "grey.200",
+                    color: "white",
+                  },
+                }}
+              >
+                {isFavorite ? <Favorite /> : <FavoriteBorder />}
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
       </CardContent>
     </Card>

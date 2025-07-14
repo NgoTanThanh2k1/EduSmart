@@ -20,8 +20,13 @@ import {
   PriceCheck,
 } from "@mui/icons-material";
 
-const SearchAndFilter = ({ onFilter, onClear }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+const SearchAndFilter = ({
+  searchTerm,
+  setSearchTerm,
+  onFilter,
+  onClear,
+  onSearch,
+}) => {
   const [priceFilter, setPriceFilter] = useState("all");
 
   const handleSearchChange = (event) => {
@@ -31,8 +36,11 @@ const SearchAndFilter = ({ onFilter, onClear }) => {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     if (searchTerm.trim()) {
-      // Chuyển đến trang Search với từ khóa
-      window.navigateTo("/search");
+      if (onSearch) {
+        onSearch(searchTerm);
+      } else {
+        window.navigateTo("/search");
+      }
     }
   };
 

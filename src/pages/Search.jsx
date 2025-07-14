@@ -42,7 +42,6 @@ import { useViewHistory } from "../hooks/useViewHistory";
 import ToastNotification from "../components/ToastNotification";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import apiCourse from "../apis/apiCourse";
-import apiUserCourse from "../apis/apiUserCourse";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,15 +49,14 @@ const Search = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [sortBy, setSortBy] = useState("relevance");
-  const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
-  const [userCourses, setUserCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
+  const [showAll, setShowAll] = useState(false);
 
   const { addToCart } = useCart();
   const { isInFavorites, toggleFavorite } = useFavorites();
@@ -69,12 +67,8 @@ const Search = () => {
     const loadCourses = async () => {
       setLoading(true);
       try {
-        const [coursesRes, userCoursesRes] = await Promise.all([
-          apiCourse.get("/Course"),
-          apiUserCourse.get("/UserCourse"),
-        ]);
+        const coursesRes = await apiCourse.get("/Course");
         setCourses(coursesRes.data);
-        setUserCourses(userCoursesRes.data);
         setFilteredCourses(coursesRes.data);
       } catch (error) {
         console.error("Error loading courses:", error);
@@ -87,6 +81,12 @@ const Search = () => {
     };
 
     loadCourses();
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get("query") || "";
+    setSearchTerm(query);
   }, []);
 
   // Apply filters and search
@@ -336,70 +336,63 @@ const Search = () => {
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ maxWidth: 1200, mx: "auto", px: 3, py: 4 }}>
+      <Box
+        sx={{
+          mx: "auto",
+          px: 3,
+          py: 4,
+          maxWidth: 1000,
+        }}
+      >
         <Grid container spacing={3}>
           {/* Filters Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} sm={4} md={3} lg={3}>
             <Card sx={{ position: "sticky", top: 20 }}>
               <CardContent>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                  <FilterList sx={{ mr: 1, color: "primary.main" }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Bộ Lọc
-                  </Typography>
-                </Box>
-
-                {/* Price Range */}
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ mb: 2, fontWeight: 600 }}
-                  >
-                    <PriceCheck
-                      sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    justifyContent: "center", // <-- chỉ cần dòng này ở đây!
+                  }}
+                >
+                  {/* Price Range */}
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                      <PriceCheck
+                        sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
+                      />
+                      Khoảng Giá
+                    </Typography>
+                    <Slider
+                      value={priceRange}
+                      onChange={(event, newValue) => setPriceRange(newValue)}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={5000000}
+                      step={100000}
+                      valueLabelFormat={(value) => formatPrice(value)}
+                      sx={{ mt: 2, minWidth: 180, maxWidth: 220 }}
                     />
-                    Khoảng Giá
-                  </Typography>
-                  <Slider
-                    value={priceRange}
-                    onChange={(event, newValue) => setPriceRange(newValue)}
-                    valueLabelDisplay="auto"
-                    min={0}
-                    max={5000000}
-                    step={100000}
-                    valueLabelFormat={(value) => formatPrice(value)}
-                    sx={{ mt: 2 }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      mt: 1,
-                    }}
-                  >
-                    <Typography variant="caption" color="text.secondary">
-                      {formatPrice(priceRange[0])}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {formatPrice(priceRange[1])}
-                    </Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        mt: 1,
+                      }}
+                    >
+                      <Typography variant="caption" color="text.secondary">
+                        {formatPrice(priceRange[0])}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {formatPrice(priceRange[1])}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-
-                <Divider sx={{ my: 2 }} />
-
-                {/* Category Filter */}
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ mb: 2, fontWeight: 600 }}
-                  >
-                    <Category
-                      sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
-                    />
-                    Danh Mục
-                  </Typography>
-                  <FormControl fullWidth size="small">
+                  {/* Category Filter */}
+                  <FormControl size="small" sx={{ minWidth: 150 }}>
                     <Select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
@@ -411,20 +404,8 @@ const Search = () => {
                       ))}
                     </Select>
                   </FormControl>
-                </Box>
-
-                {/* Level Filter */}
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ mb: 2, fontWeight: 600 }}
-                  >
-                    <School
-                      sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
-                    />
-                    Cấp Độ
-                  </Typography>
-                  <FormControl fullWidth size="small">
+                  {/* Level Filter */}
+                  <FormControl size="small" sx={{ minWidth: 150 }}>
                     <Select
                       value={selectedLevel}
                       onChange={(e) => setSelectedLevel(e.target.value)}
@@ -436,20 +417,8 @@ const Search = () => {
                       ))}
                     </Select>
                   </FormControl>
-                </Box>
-
-                {/* Sort Options */}
-                <Box sx={{ mb: 3 }}>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ mb: 2, fontWeight: 600 }}
-                  >
-                    <TrendingUp
-                      sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
-                    />
-                    Sắp Xếp
-                  </Typography>
-                  <FormControl fullWidth size="small">
+                  {/* Sort Options */}
+                  <FormControl size="small" sx={{ minWidth: 150 }}>
                     <Select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
@@ -461,23 +430,21 @@ const Search = () => {
                       ))}
                     </Select>
                   </FormControl>
+                  {/* Clear Filters */}
+                  <Button
+                    variant="outlined"
+                    onClick={handleClearSearch}
+                    startIcon={<Clear />}
+                  >
+                    Xóa Bộ Lọc
+                  </Button>
                 </Box>
-
-                {/* Clear Filters */}
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={handleClearSearch}
-                  startIcon={<Clear />}
-                >
-                  Xóa Bộ Lọc
-                </Button>
               </CardContent>
             </Card>
           </Grid>
 
           {/* Results Section */}
-          <Grid item xs={12} md={9}>
+          <Grid item xs={12} sm={8} md={9} lg={9}>
             {/* Results Header */}
             <Box sx={{ mb: 3 }}>
               <Box
@@ -563,32 +530,50 @@ const Search = () => {
 
             {/* Results Grid */}
             {!loading && filteredCourses.length > 0 && (
-              <Grid container spacing={3}>
-                {filteredCourses.map((course) => (
-                  <Grid item xs={12} sm={6} lg={4} key={course.id}>
-                    <CourseCard
-                      course={course}
-                      isSelected={selectedCourse?.id === course.id}
-                      isFavorite={isInFavorites(course.id)}
-                      onSelect={handleAddToCart}
-                      onFavorite={() => handleFavorite(course)}
-                      onShare={handleViewDetail}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+              <div>
+                <Grid container spacing={3}>
+                  {(showAll
+                    ? filteredCourses
+                    : filteredCourses.slice(0, 3)
+                  ).map((course) => (
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      md={4}
+                      key={course.id}
+                      display="flex"
+                      sx={{ width: "100%", height: "100%", maxWidth: "290px" }}
+                    >
+                      <CourseCard
+                        course={course}
+                        isSelected={selectedCourse?.id === course.id}
+                        isFavorite={isInFavorites(course.id)}
+                        onSelect={setSelectedCourse}
+                        onAddToCart={() => handleAddToCart(course)}
+                        onFavorite={() => handleFavorite(course)}
+                        onShare={() => handleViewDetail(course)}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </div>
             )}
 
             {/* Load More Button */}
-            {!loading &&
-              filteredCourses.length > 0 &&
-              filteredCourses.length >= 9 && (
+            {!showAll && filteredCourses.length > 3 && (
+              <div>
                 <Box sx={{ textAlign: "center", mt: 4 }}>
-                  <Button variant="outlined" size="large">
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => setShowAll(true)}
+                  >
                     Xem Thêm Khóa Học
                   </Button>
                 </Box>
-              )}
+              </div>
+            )}
           </Grid>
         </Grid>
       </Box>

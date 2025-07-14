@@ -79,9 +79,8 @@ const Favorites = () => {
     toggleFavorite(course);
   };
 
-  const handleViewDetail = (course) => {
+  const handleViewDetail = () => {
     // Handle view detail - you can implement modal or navigation here
-    console.log("View detail:", course);
   };
 
   const handleSelectCourse = (course) => {

@@ -215,8 +215,6 @@ const CartDropdown = ({ open, onClose }) => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  // Xử lý thanh toán
-                  console.log("Thanh toán:", items);
                   onClose();
                 }}
               >

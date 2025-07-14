@@ -7,10 +7,6 @@ const ToastNotification = ({
   onClose,
   duration = 3000,
 }) => {
-  console.log("🔔 ToastNotification props:", { open, message, type, duration });
-
-  console.log("🔔 ToastNotification rendering with message:", message);
-
   const getBackgroundColor = () => {
     switch (type) {
       case "success":
@@ -28,34 +24,19 @@ const ToastNotification = ({
 
   // Auto close after duration
   React.useEffect(() => {
-    console.log(
-      "🔔 ToastNotification useEffect - open:",
-      open,
-      "duration:",
-      duration
-    );
     if (open && duration > 0) {
-      console.log("🔔 Setting up auto-close timer");
       const timer = setTimeout(() => {
-        console.log("🔔 Auto-close timer fired");
         onClose();
       }, duration);
       return () => {
-        console.log("🔔 Clearing auto-close timer");
         clearTimeout(timer);
       };
     }
   }, [open, duration, onClose]);
 
   if (!open) {
-    console.log("🔔 ToastNotification not open, returning null");
     return null;
   }
-
-  console.log(
-    "🔔 ToastNotification rendering actual toast with message:",
-    message
-  );
 
   return (
     <div

@@ -61,7 +61,7 @@ const AISuggestions = () => {
             "Học các pattern nâng cao trong React để tối ưu hiệu suất ứng dụng",
           price: 1200000,
           image:
-            "https://via.placeholder.com/300x200/4CAF50/FFFFFF?text=React+Advanced",
+            "https://media.licdn.com/dms/image/v2/D4E12AQGWPcBi2kZm6Q/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1710106667659?e=2147483647&v=beta&t=7Dwcd3Gw-5XabPjqxLB1lDMw-p6qmj8Lh6Wq1PZdOk8",
           rating: 4.8,
           students: 1250,
           tags: ["React", "Advanced", "Performance"],
@@ -74,7 +74,7 @@ const AISuggestions = () => {
             "Xây dựng API và backend services với Node.js và Express",
           price: 980000,
           image:
-            "https://via.placeholder.com/300x200/2196F3/FFFFFF?text=Node.js+Backend",
+            "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20220517005132/Why-to-Use-NodeJS-for-Backend-Development.jpg",
           rating: 4.6,
           students: 890,
           tags: ["Node.js", "Backend", "API"],
@@ -86,7 +86,7 @@ const AISuggestions = () => {
           description: "Làm chủ TypeScript để viết code an toàn và dễ bảo trì",
           price: 750000,
           image:
-            "https://via.placeholder.com/300x200/FF9800/FFFFFF?text=TypeScript",
+            "https://media.licdn.com/dms/image/v2/D5612AQGP6EeS0lv58A/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1699496944179?e=2147483647&v=beta&t=6Ho5aKqDbewH7zIQZAEH_ML9e_0X_iFZmOZ9ipB7Rhs",
           rating: 4.9,
           students: 2100,
           tags: ["TypeScript", "JavaScript", "Type Safety"],
@@ -98,7 +98,7 @@ const AISuggestions = () => {
           description: "Thiết kế cơ sở dữ liệu và truy vấn SQL hiệu quả",
           price: 650000,
           image:
-            "https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=Database+SQL",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUUPyXzt90cT9DCUHz2dCLH_Zp1GXpRWb9lELyWMAewLAHhhs-SIi-Y1Qv-PO9nVPbzog&usqp=CAU",
           rating: 4.7,
           students: 1560,
           tags: ["Database", "SQL", "Design"],
@@ -115,7 +115,7 @@ const AISuggestions = () => {
             "Khóa học nâng cao về JavaScript cho người đã có kiến thức cơ bản",
           price: 850000,
           image:
-            "https://via.placeholder.com/300x200/FF5722/FFFFFF?text=JS+Advanced",
+            "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20201028214738/7-JavaScript-Concepts-That-Every-Developer-Must-Know.jpg",
           rating: 4.7,
           students: 980,
           tags: ["JavaScript", "Advanced", "ES6+"],
@@ -130,7 +130,7 @@ const AISuggestions = () => {
           description: "Khóa học toàn diện về phát triển web full-stack",
           price: 1500000,
           image:
-            "https://via.placeholder.com/300x200/607D8B/FFFFFF?text=Full+Stack",
+            "https://s3.ap-southeast-1.amazonaws.com/uplyrn.com/uploads%2F0000%2F50%2F2022%2F10%2F11%2Fthe-ultimate-2022-full-stack-web-development-bootcamp-uplyrn.webp",
           rating: 4.8,
           students: 2100,
           tags: ["Full-Stack", "Web Development", "Bootcamp"],
@@ -145,7 +145,7 @@ const AISuggestions = () => {
           description: "Học sử dụng các công cụ hiện đại trong phát triển web",
           price: 550000,
           image:
-            "https://via.placeholder.com/300x200/795548/FFFFFF?text=Dev+Tools",
+            "https://media.licdn.com/dms/image/v2/D4D12AQEreOM3Y2et6w/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1696586957704?e=2147483647&v=beta&t=JLAOhqylMibxrkFcFrCM63ap0hlE2v8g1mjPC5TZF0M",
           rating: 4.5,
           students: 750,
           tags: ["Tools", "Development", "Modern"],
