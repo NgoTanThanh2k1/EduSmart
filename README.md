@@ -1,7 +1,7 @@
 # 🎓 EduSmart - Nền Tảng Học Tập Trực Tuyến
 
 EduSmart là một ứng dụng web hiện đại được xây dựng bằng React, cung cấp trải nghiệm học tập trực tuyến với các khóa học lập trình, cuộc thi và tài liệu chia sẻ kiến thức.
-# 🎓 Ghé thăm trnag web - [Nền Tảng Học Tập Trực Tuyến](https://edu-smart-nine.vercel.app/)
+# 🎓 Ghé thăm trang web - [Nền Tảng Học Tập Trực Tuyến](https://edu-smart-nine.vercel.app/)
 ## ✨ Tính Năng Chính
 
 ### 🛒 **Hệ Thống Giỏ Hàng**
