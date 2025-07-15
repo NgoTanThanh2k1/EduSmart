@@ -1,7 +1,7 @@
 # 🎓 EduSmart - Nền Tảng Học Tập Trực Tuyến
 
 EduSmart là một ứng dụng web hiện đại được xây dựng bằng React, cung cấp trải nghiệm học tập trực tuyến với các khóa học lập trình, cuộc thi và tài liệu chia sẻ kiến thức.
-
+# 🎓 Ghé thăm trnag web - [Nền Tảng Học Tập Trực Tuyến](https://edu-smart-nine.vercel.app/)
 ## ✨ Tính Năng Chính
 
 ### 🛒 **Hệ Thống Giỏ Hàng**
@@ -53,7 +53,7 @@ EduSmart là một ứng dụng web hiện đại được xây dựng bằng Re
 
 ### Yêu Cầu Hệ Thống
 
-- Node.js (version 16 trở lên)
+- Node.js (version 24 trở lên)
 - npm hoặc yarn
 
 ### Bước 1: Clone Repository
@@ -211,10 +211,7 @@ export const addCourse = (courseData) => {
 
 ### Course API
 
-- `GET /Course` - Lấy danh sách khóa học
-- `POST /Course` - Thêm khóa học mới
-- `PUT /Course/:id` - Cập nhật khóa học
-- `DELETE /Course/:id` - Xóa khóa học
+- mockapi
 
 ### User Course API
 
@@ -237,14 +234,7 @@ Dự án này được phát hành dưới MIT License.
 
 - **Frontend Developer** - React, Material-UI
 - **UI/UX Designer** - Modern design, Responsive
-- **Backend Integration** - API development
+- **Backend Integration** - mockapi
 
-## 📞 Liên Hệ
-
-- Email: contact@edusmart.com
-- Website: https://edusmart.com
-- GitHub: https://github.com/edusmart
-
----
 
 **EduSmart** - Nền tảng học tập thông minh cho tương lai! 🚀
